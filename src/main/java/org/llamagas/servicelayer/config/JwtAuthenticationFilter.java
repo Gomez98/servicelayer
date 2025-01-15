@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws IOException {
         try {
             String requestURI = request.getRequestURI();
-            if (requestURI.equals("/auth/login")) {
+            if (requestURI.equals("/auth/login")  || requestURI.equals("/auth/register")) {
                 chain.doFilter(request, response);
                 return;
             }

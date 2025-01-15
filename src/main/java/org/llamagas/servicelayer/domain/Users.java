@@ -6,7 +6,6 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "Users", schema = "dbo")
 @Data
 public class Users {
     @Id

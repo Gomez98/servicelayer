@@ -31,6 +31,10 @@ public class AuthService {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(tokenProvider.generateToken(user.getUsername(), user.getPassword()));
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+    }
 
+    public ResponseEntity<?> register(Users user) {
+        Users userCreated = (Users) usersService.createUser(user).getBody();
+        return new ResponseEntity<>(userCreated, HttpStatus.OK);
     }
 }

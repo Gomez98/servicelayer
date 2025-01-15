@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "GoalDetail", schema = "dbo")
 @Data
 public class GoalDetail {
     @Id
@@ -14,6 +13,7 @@ public class GoalDetail {
     @JoinColumn(name = "headerId", nullable = false)
     private GoalHeader goalHeader;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 }
 
