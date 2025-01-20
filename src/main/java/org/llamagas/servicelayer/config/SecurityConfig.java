@@ -57,7 +57,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // Permitir credenciales
-        config.addAllowedOrigin("https://sv-hol0uzz7c3.cloud.elastika.pe"); // Orígenes permitidos
+        config.addAllowedOrigin("https://sv-hol0uzz7c3.cloud.elastika.pe:8080"); // Orígenes permitidos
         config.addAllowedHeader("*"); // Permitir todos los encabezados
         config.addAllowedMethod("*"); // Permitir todos los métodos HTTP
         source.registerCorsConfiguration("/**", config);
