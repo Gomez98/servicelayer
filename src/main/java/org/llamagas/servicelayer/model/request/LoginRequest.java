@@ -1,4 +1,4 @@
-package org.llamagas.servicelayer.domain;
+package org.llamagas.servicelayer.model.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

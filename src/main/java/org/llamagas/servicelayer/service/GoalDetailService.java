@@ -1,7 +1,12 @@
 package org.llamagas.servicelayer.service;
 
 
-import org.llamagas.servicelayer.domain.GoalDetail;
+import org.llamagas.servicelayer.constants.ResponsesCodes;
+import org.llamagas.servicelayer.model.domain.GoalDetail;
+import org.llamagas.servicelayer.model.domain.GoalHeader;
+import org.llamagas.servicelayer.model.request.CreateGoalDetailRequest;
+import org.llamagas.servicelayer.model.request.UpdateGoalDetailRequest;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.repository.GoalDetailRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +24,52 @@ public class GoalDetailService {
         this.goalDetailRepository = goalDetailRepository;
     }
 
-    public ResponseEntity<?> getGoalDetail(String goalHeaderId) {
+    public ResponseEntity<GeneralResponse> getGoalDetail(String goalHeaderId) {
+        GeneralResponse response = new GeneralResponse();
         Optional<GoalDetail> goalDetailOptional = goalDetailRepository.findByGoalHeader_Id(goalHeaderId);
-
         if (goalDetailOptional.isPresent()) {
-            return new ResponseEntity<>(goalDetailOptional.get(), HttpStatus.OK);
+            response.setData(goalDetailOptional.get());
+            response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+            response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Goal detail not found", HttpStatus.NOT_FOUND);
+            response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
+            response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
 
-    public ResponseEntity<?> createGoalDetail(GoalDetail goalDetail) {
+    public ResponseEntity<GeneralResponse> createGoalDetail(CreateGoalDetailRequest request) {
+        GeneralResponse response = new GeneralResponse();
+        GoalDetail goalDetail = new GoalDetail();
+
         goalDetail.setId(UUID.randomUUID().toString());
+
+        GoalHeader goalHeader = new GoalHeader();
+        goalHeader.setId(request.getGoalHeader().getId());
+
+        goalDetail.setGoalHeader(goalHeader);
+        goalDetail.setContent(request.getContent());
         goalDetailRepository.save(goalDetail);
-        return new ResponseEntity<>(goalDetail, HttpStatus.CREATED);
+
+        response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+        response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public ResponseEntity<GeneralResponse> updateGoalDetail(UpdateGoalDetailRequest request) {
+        GeneralResponse response = new GeneralResponse();
+        Optional<GoalDetail> goalDetailOptional = goalDetailRepository.findById(request.getId());
+        if (goalDetailOptional.isEmpty()) {
+            response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
+            response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        goalDetailRepository.save(goalDetailOptional.get());
+        response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+        response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

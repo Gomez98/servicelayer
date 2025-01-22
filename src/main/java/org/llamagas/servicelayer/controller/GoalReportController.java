@@ -1,12 +1,12 @@
 package org.llamagas.servicelayer.controller;
 
-import org.llamagas.servicelayer.domain.GoalReportRequest;
+import org.llamagas.servicelayer.model.request.GoalReportRequest;
 import org.llamagas.servicelayer.service.GoalReportService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/goals/report")
+@RequestMapping("/goals/report")
 public class GoalReportController {
 
     private final GoalReportService service;

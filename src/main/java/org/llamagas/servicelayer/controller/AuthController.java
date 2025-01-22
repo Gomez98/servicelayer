@@ -1,16 +1,13 @@
 package org.llamagas.servicelayer.controller;
 
-import org.llamagas.servicelayer.config.JwtTokenProvider;
-import org.llamagas.servicelayer.domain.LoginRequest;
-import org.llamagas.servicelayer.domain.Users;
+import jakarta.validation.Valid;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
+import org.llamagas.servicelayer.model.request.LoginRequest;
+import org.llamagas.servicelayer.model.domain.Users;
 import org.llamagas.servicelayer.service.AuthService;
-import org.llamagas.servicelayer.service.UsersService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -23,8 +20,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        return authService.login(loginRequest);
+    public ResponseEntity<GeneralResponse> login(@RequestBody @Valid LoginRequest request) {
+        return authService.login(request);
     }
 
 

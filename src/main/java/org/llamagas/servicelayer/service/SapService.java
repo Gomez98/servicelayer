@@ -1,12 +1,11 @@
 package org.llamagas.servicelayer.service;
 
 import org.llamagas.servicelayer.config.SapConfig;
-import org.llamagas.servicelayer.domain.*;
 import org.llamagas.servicelayer.helpers.RestTemplateHelper;
+import org.llamagas.servicelayer.model.domain.MasterFields;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;

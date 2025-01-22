@@ -1,8 +1,8 @@
 package org.llamagas.servicelayer.service;
 
-import org.llamagas.servicelayer.domain.LoginRequest;
-import org.llamagas.servicelayer.domain.Users;
-import org.llamagas.servicelayer.repository.UsersRepository;
+import org.llamagas.servicelayer.constants.ResponsesCodes;
+import org.llamagas.servicelayer.model.domain.Users;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
@@ -22,12 +22,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ResponseEntity<?> response = usersService.getByUsername(username);
-        if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-            throw new UsernameNotFoundException("Usuario no encontrado");
+        ResponseEntity<GeneralResponse> response = usersService.getByUsername(username);
+        if (response.getBody().getCode().equalsIgnoreCase(ResponsesCodes.OBJECT_NOT_FOUND.getCode())) {
+            throw new UsernameNotFoundException(response.getBody().getMessage());
         }
 
-        Users user = (Users) response.getBody();
+        Users user = (Users) response.getBody().getData();
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())

@@ -1,4 +1,4 @@
-package org.llamagas.servicelayer.domain;
+package org.llamagas.servicelayer.model.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;

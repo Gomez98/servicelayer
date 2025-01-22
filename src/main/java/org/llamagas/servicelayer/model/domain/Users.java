@@ -1,8 +1,7 @@
-package org.llamagas.servicelayer.domain;
+package org.llamagas.servicelayer.model.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity

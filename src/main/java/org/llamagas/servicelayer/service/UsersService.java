@@ -1,7 +1,8 @@
 package org.llamagas.servicelayer.service;
 
-import org.llamagas.servicelayer.domain.LoginRequest;
-import org.llamagas.servicelayer.domain.Users;
+import org.llamagas.servicelayer.constants.ResponsesCodes;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
+import org.llamagas.servicelayer.model.domain.Users;
 import org.llamagas.servicelayer.repository.UsersRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,31 +24,49 @@ public class UsersService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public ResponseEntity<?> createUser(Users user) {
+    public ResponseEntity<GeneralResponse> createUser(Users user) {
+        GeneralResponse response = new GeneralResponse();
+
         user.setId(UUID.randomUUID().toString());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        usersRepository.save(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+        response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+        response.setData(usersRepository.save(user));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getUser(LoginRequest loginRequest) {
-        Optional<Users> user = usersRepository.findByUsername(loginRequest.getUsername());
-        if (user.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        return new ResponseEntity<>(user.get(), HttpStatus.OK);
-    }
-
-    public ResponseEntity<?> getByUsername(String username) {
+    public ResponseEntity<GeneralResponse> getUser(String username, String password) {
+        GeneralResponse response = new GeneralResponse();
         Optional<Users> user = usersRepository.findByUsername(username);
         if (user.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
+            response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>(user.get(), HttpStatus.OK);
+
+        if (!passwordEncoder.matches(password, user.get().getPassword())) {
+            response.setCode(ResponsesCodes.UNAUTHORIZED.getCode());
+            response.setMessage(ResponsesCodes.UNAUTHORIZED.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+        response.setData(user.get());
+        response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+        response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public ResponseEntity<GeneralResponse> getByUsername(String username) {
+        GeneralResponse response = new GeneralResponse();
+        Optional<Users> user = usersRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
+            response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+        response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+        response.setData(user.get());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

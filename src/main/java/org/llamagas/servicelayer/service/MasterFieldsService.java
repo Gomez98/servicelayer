@@ -1,13 +1,15 @@
 package org.llamagas.servicelayer.service;
 
-import org.llamagas.servicelayer.domain.MasterFields;
+import org.llamagas.servicelayer.constants.ResponsesCodes;
+import org.llamagas.servicelayer.model.request.CreateMasterFieldRequest;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
+import org.llamagas.servicelayer.model.domain.MasterFields;
+import org.llamagas.servicelayer.model.request.UpdateMasterFieldRequest;
 import org.llamagas.servicelayer.repository.MasterFieldsRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,30 +23,53 @@ public class MasterFieldsService {
         this.masterFieldsRepository = masterFieldsRepository;
     }
 
-    public ResponseEntity<?> getAllMasterFields() {
+    public ResponseEntity<GeneralResponse> getAllMasterFields() {
+        GeneralResponse response = new GeneralResponse();
         List<MasterFields> masterFieldsList = masterFieldsRepository.findAll();
-        return new ResponseEntity<>(masterFieldsList, HttpStatus.OK);
+        if(masterFieldsList.isEmpty()){
+            response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
+            response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
+            response.setData(null);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+        response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> createMasterField(MasterFields masterFields) {
+    public ResponseEntity<GeneralResponse> createMasterField(CreateMasterFieldRequest request) {
+        GeneralResponse response = new GeneralResponse();
+
+        MasterFields masterFields = new MasterFields();
+        masterFields.setName(request.getName());
         masterFields.setId(UUID.randomUUID().toString());
+        masterFields.setActive(true);
+
         MasterFields masterField = masterFieldsRepository.save(masterFields);
-        return new ResponseEntity<>(masterField, HttpStatus.CREATED);
+
+        response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+        response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+        response.setData(masterField);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<?> updateMasterField(String id, MasterFields updatedField) {
-        Optional<MasterFields> optionalMasterField = masterFieldsRepository.findById(id);
-
+    public ResponseEntity<GeneralResponse> updateMasterField(UpdateMasterFieldRequest request) {
+        GeneralResponse response = new GeneralResponse();
+        Optional<MasterFields> optionalMasterField = masterFieldsRepository.findById(request.getId());
         if (optionalMasterField.isPresent()) {
             MasterFields existingField = optionalMasterField.get();
-            existingField.setName(updatedField.getName());
-            existingField.setActive(updatedField.isActive());
+            existingField.setName(request.getName());
+            existingField.setActive(request.isActive());
 
             MasterFields savedField = masterFieldsRepository.save(existingField);
-
-            return new ResponseEntity<>(savedField, HttpStatus.OK);
+            response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+            response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+            response.setData(savedField);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Master field not found with ID: " + id, HttpStatus.NOT_FOUND);
+            response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
+            response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
 }

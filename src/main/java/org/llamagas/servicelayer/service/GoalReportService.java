@@ -1,6 +1,6 @@
 package org.llamagas.servicelayer.service;
 
-import org.llamagas.servicelayer.domain.GoalReportRequest;
+import org.llamagas.servicelayer.model.request.GoalReportRequest;
 import org.llamagas.servicelayer.repository.GoalReportRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

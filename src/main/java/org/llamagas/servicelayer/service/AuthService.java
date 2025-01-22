@@ -1,14 +1,13 @@
 package org.llamagas.servicelayer.service;
 
 import org.llamagas.servicelayer.config.JwtTokenProvider;
-import org.llamagas.servicelayer.domain.LoginRequest;
-import org.llamagas.servicelayer.domain.LoginResponse;
-import org.llamagas.servicelayer.domain.Users;
+import org.llamagas.servicelayer.constants.ResponsesCodes;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
+import org.llamagas.servicelayer.model.request.LoginRequest;
+import org.llamagas.servicelayer.model.domain.Users;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 public class AuthService {
@@ -21,16 +20,22 @@ public class AuthService {
         this.tokenProvider = tokenProvider;
     }
 
-    public ResponseEntity<?> login(LoginRequest loginRequest) {
-        ResponseEntity<?> response = usersService.getUser(loginRequest);
-        if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<GeneralResponse> login(LoginRequest request) {
+        GeneralResponse response = new GeneralResponse();
+        ResponseEntity<GeneralResponse> userResponse = usersService.getUser(request.getUsername(), request.getPassword());
+        if (userResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+            response.setCode(ResponsesCodes.UNAUTHORIZED.getCode());
+            response.setMessage(ResponsesCodes.UNAUTHORIZED.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
-
-        Users user = (Users) response.getBody();
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(tokenProvider.generateToken(user.getUsername(), user.getPassword()));
-        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+        if(userResponse.getBody() == null || userResponse.getBody().getData() == null) {
+            response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
+            response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        Users user = (Users) userResponse.getBody().getData();
+        response.setData(tokenProvider.generateToken(user.getUsername()));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public ResponseEntity<?> register(Users user) {

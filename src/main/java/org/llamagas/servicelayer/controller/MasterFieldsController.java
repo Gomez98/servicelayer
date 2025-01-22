@@ -1,13 +1,14 @@
 package org.llamagas.servicelayer.controller;
 
-import org.llamagas.servicelayer.domain.MasterFields;
+import org.llamagas.servicelayer.model.request.CreateMasterFieldRequest;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
+import org.llamagas.servicelayer.model.request.UpdateMasterFieldRequest;
 import org.llamagas.servicelayer.service.MasterFieldsService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/master-fields")
+@RequestMapping("/master-fields")
 public class MasterFieldsController {
 
     private final MasterFieldsService masterFieldsService;
@@ -16,19 +17,19 @@ public class MasterFieldsController {
         this.masterFieldsService = masterFieldsService;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<?> getAllMasterFields() {
+    @GetMapping("/all")
+    public ResponseEntity<GeneralResponse> getAllMasterFields() {
         return masterFieldsService.getAllMasterFields();
     }
 
-    @PostMapping("/")
-    public ResponseEntity<?> addMasterField(@Validated @RequestBody MasterFields masterField) {
-        return masterFieldsService.createMasterField(masterField);
+    @PostMapping("/create")
+    public ResponseEntity<GeneralResponse> addMasterField(@RequestBody CreateMasterFieldRequest request) {
+        return masterFieldsService.createMasterField(request);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateMasterField(@PathVariable String id, @Validated @RequestBody MasterFields updatedField) {
-        return masterFieldsService.updateMasterField(id, updatedField);
+    @PatchMapping("/update")
+    public ResponseEntity<GeneralResponse> updateMasterField(@RequestBody UpdateMasterFieldRequest request) {
+        return masterFieldsService.updateMasterField(request);
     }
 
 }

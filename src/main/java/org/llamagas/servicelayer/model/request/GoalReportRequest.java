@@ -1,4 +1,4 @@
-package org.llamagas.servicelayer.domain;
+package org.llamagas.servicelayer.model.request;
 
 import lombok.Data;
 
