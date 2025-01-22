@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Deshabilitar CSRF
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configurar CORS
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() // Permitir acceso público a rutas de autenticación
+                        .requestMatchers("/api/auth/**").permitAll() // Permitir acceso público a rutas de autenticación
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Permitir solicitudes OPTIONS
                         .anyRequest().authenticated() // Requiere autenticación para cualquier otra solicitud
                 )

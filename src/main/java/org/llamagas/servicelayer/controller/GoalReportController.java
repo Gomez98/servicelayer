@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/goals/report")
+@RequestMapping("/api/goals/report")
 public class GoalReportController {
 
     private final GoalReportService service;

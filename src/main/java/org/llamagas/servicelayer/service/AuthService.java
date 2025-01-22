@@ -34,12 +34,14 @@ public class AuthService {
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         Users user = (Users) userResponse.getBody().getData();
+        response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+        response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
         response.setData(tokenProvider.generateToken(user.getUsername()));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public ResponseEntity<?> register(Users user) {
-        Users userCreated = (Users) usersService.createUser(user).getBody();
+        Users userCreated = (Users) usersService.createUser(user).getBody().getData();
         return new ResponseEntity<>(userCreated, HttpStatus.OK);
     }
 }

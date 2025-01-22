@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/goals/header")
+@RequestMapping("/api/goals/header")
 public class GoalHeaderController {
 
     private final GoalHeaderService goalHeaderService;

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/goals/detail")
+@RequestMapping("/api/goals/detail")
 public class GoalDetailController {
 
     private final GoalDetailService goalDetailService;

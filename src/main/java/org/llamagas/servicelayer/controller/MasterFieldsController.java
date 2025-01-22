@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/master-fields")
+@RequestMapping("/api/master-fields")
 public class MasterFieldsController {
 
     private final MasterFieldsService masterFieldsService;
