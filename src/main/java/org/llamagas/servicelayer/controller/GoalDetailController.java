@@ -2,6 +2,7 @@ package org.llamagas.servicelayer.controller;
 
 import jakarta.validation.Valid;
 import org.llamagas.servicelayer.model.request.CreateGoalDetailRequest;
+import org.llamagas.servicelayer.model.request.DeleteGoalDetailRequest.DeleteGoalDetailRequest;
 import org.llamagas.servicelayer.model.response.GeneralResponse;
     import org.llamagas.servicelayer.model.request.UpdateGoalDetailRequest;
 import org.llamagas.servicelayer.service.GoalDetailService;

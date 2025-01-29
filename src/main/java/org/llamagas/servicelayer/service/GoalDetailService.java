@@ -50,23 +50,25 @@ public class GoalDetailService {
 
         goalDetail.setGoalHeader(goalHeader);
         goalDetail.setContent(request.getContent());
-        goalDetailRepository.save(goalDetail);
+        GoalDetail saved = goalDetailRepository.save(goalDetail);
 
         response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
         response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+        response.setData(saved);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public ResponseEntity<GeneralResponse> updateGoalDetail(UpdateGoalDetailRequest request) {
         GeneralResponse response = new GeneralResponse();
-        Optional<GoalDetail> goalDetailOptional = goalDetailRepository.findById(request.getId());
+        Optional<GoalDetail> goalDetailOptional = goalDetailRepository.findByGoalHeader_Id(request.getId());
         if (goalDetailOptional.isEmpty()) {
             response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
             response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-
-        goalDetailRepository.save(goalDetailOptional.get());
+        GoalDetail goalDetail = goalDetailOptional.get();
+        goalDetail.setContent(request.getContent());
+        goalDetailRepository.save(goalDetail);
         response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
         response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
         return new ResponseEntity<>(response, HttpStatus.OK);

@@ -8,8 +8,6 @@ import io.jsonwebtoken.security.Keys;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Map;
-
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.stereotype.Component;
 

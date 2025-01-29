@@ -34,6 +34,7 @@ public class MasterFieldsService {
         }
         response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
         response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+        response.setData(masterFieldsList);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
