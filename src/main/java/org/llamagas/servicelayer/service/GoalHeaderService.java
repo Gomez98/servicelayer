@@ -1,7 +1,9 @@
 package org.llamagas.servicelayer.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.llamagas.servicelayer.constants.ResponsesCodes;
 import org.llamagas.servicelayer.model.request.CreateGoalHeaderRequest;
+import org.llamagas.servicelayer.model.response.AllGoalsResponse;
 import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.model.domain.GoalHeader;
 import org.llamagas.servicelayer.model.domain.GoalHeaderStatus;
@@ -30,9 +32,13 @@ public class GoalHeaderService {
             response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
+        AllGoalsResponse allGoalsResponse = new AllGoalsResponse();
+        allGoalsResponse.setGoalHeaders(goalHeaders);
+        allGoalsResponse.setTotalGoals(goalHeaders.size());
+
         response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
         response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
-        response.setData(goalHeaders);
+        response.setData(allGoalsResponse);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
