@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class GoalDetail {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "CHAR(36)")
     private String id;
 
     @OneToOne

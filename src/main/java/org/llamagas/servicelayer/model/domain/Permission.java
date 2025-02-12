@@ -1,16 +1,18 @@
 package org.llamagas.servicelayer.model.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
 @Data
-public class MasterFields {
+public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "CHAR(36)")
     private String id;
-    private String name;
-    private boolean active;
-}
 
+    @NotNull
+    @Column(unique = true, nullable = false)
+    private String name;
+}

@@ -2,9 +2,10 @@ package org.llamagas.servicelayer.service;
 
 import org.llamagas.servicelayer.config.JwtTokenProvider;
 import org.llamagas.servicelayer.constants.ResponsesCodes;
+import org.llamagas.servicelayer.model.request.CreateUserRequest;
 import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.model.request.LoginRequest;
-import org.llamagas.servicelayer.model.domain.Users;
+import org.llamagas.servicelayer.model.domain.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,15 +34,15 @@ public class AuthService {
             response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        Users user = (Users) userResponse.getBody().getData();
+        User user = (User) userResponse.getBody().getData();
         response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
         response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
-        response.setData(tokenProvider.generateToken(user.getUsername()));
+        response.setData(tokenProvider.generateToken(user));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> register(Users user) {
-        Users userCreated = (Users) usersService.createUser(user).getBody().getData();
-        return new ResponseEntity<>(userCreated, HttpStatus.OK);
+    public ResponseEntity<GeneralResponse> register(CreateUserRequest request) {
+        ResponseEntity<GeneralResponse> userResponse = usersService.createUser(request);
+        return new ResponseEntity<>(userResponse.getBody(), userResponse.getStatusCode());
     }
 }

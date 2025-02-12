@@ -1,11 +1,12 @@
 package org.llamagas.servicelayer.controller;
 
 import jakarta.validation.Valid;
+import org.llamagas.servicelayer.model.request.CreateUserRequest;
 import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.model.request.LoginRequest;
-import org.llamagas.servicelayer.model.domain.Users;
 import org.llamagas.servicelayer.service.AuthService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,10 +25,10 @@ public class AuthController {
         return authService.login(request);
     }
 
-
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Users user) {
-        return authService.register(user);
+    @PreAuthorize("hasAuthority('PERMISO_REGISTRAR_USUARIO')")
+    public ResponseEntity<?> register(@RequestBody @Valid CreateUserRequest request) {
+        return authService.register(request);
     }
 }
 

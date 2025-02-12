@@ -2,6 +2,7 @@ package org.llamagas.servicelayer.controller;
 
 import org.llamagas.servicelayer.service.ConvertService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ public class ConvertController {
     }
 
     @PostMapping("/")
+    @PreAuthorize("hasAuthority('PERMISO_CONVERTIR_ARCHIVO')")
     public ResponseEntity<byte[]> convertPdfToExcel(@RequestParam("file") MultipartFile file) {
         return convertService.convert(file);
     }

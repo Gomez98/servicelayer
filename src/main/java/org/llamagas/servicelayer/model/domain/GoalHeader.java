@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class GoalHeader {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "CHAR(36)")
     private String id;
     private String description;
     private String createdBy;

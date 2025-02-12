@@ -1,16 +1,21 @@
 package org.llamagas.servicelayer.service;
 
 import org.llamagas.servicelayer.constants.ResponsesCodes;
+import org.llamagas.servicelayer.model.domain.Role;
+import org.llamagas.servicelayer.model.request.CreateUserRequest;
 import org.llamagas.servicelayer.model.response.GeneralResponse;
-import org.llamagas.servicelayer.model.domain.Users;
+import org.llamagas.servicelayer.model.domain.User;
 import org.llamagas.servicelayer.repository.UsersRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -18,27 +23,65 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
-    public UsersService(UsersRepository usersRepository) {
+    public UsersService(UsersRepository usersRepository,RoleService roleService) {
         this.usersRepository = usersRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
+        this.roleService = roleService;
     }
 
-    public ResponseEntity<GeneralResponse> createUser(Users user) {
+
+    @Transactional
+    public ResponseEntity<GeneralResponse> createUser(CreateUserRequest request) {
         GeneralResponse response = new GeneralResponse();
 
-        user.setId(UUID.randomUUID().toString());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Verificar si el usuario ya existe
+        if (usersRepository.findByUsername(request.getUsername()).isPresent()) {
+            response.setCode(ResponsesCodes.ENTITY_ALREADY_EXITS.getCode());
+            response.setMessage(ResponsesCodes.ENTITY_ALREADY_EXITS.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        }
+
+        // Crear el usuario (sin roles)
+        User newUser = new User();
+        //newUser.setId(UUID.randomUUID().toString());
+        newUser.setUsername(request.getUsername());
+        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        newUser.setName(request.getName());
+
+        // Buscar roles y asignarlos al usuario
+        Set<Role> roles = new HashSet<>();
+        for (CreateUserRequest.CreateUserRoleRequest role : request.getRoles()) {
+            ResponseEntity<GeneralResponse> roleResponse = roleService.getRoleByName(role.getName().toUpperCase());
+
+            if (roleResponse.getBody() != null &&
+                    roleResponse.getBody().getCode().equalsIgnoreCase(ResponsesCodes.SUCCESSFUL.getCode())) {
+
+                Role foundRole = (Role) roleResponse.getBody().getData();
+                roles.add(foundRole);
+            } else {
+                response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
+                response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        newUser.setRoles(roles);
+        User savedUser = usersRepository.save(newUser);
+
+        // Respuesta exitosa
         response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
         response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
-        response.setData(usersRepository.save(user));
+        response.setData(savedUser);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
 
     public ResponseEntity<GeneralResponse> getUser(String username, String password) {
         GeneralResponse response = new GeneralResponse();
-        Optional<Users> user = usersRepository.findByUsername(username);
+        Optional<User> user = usersRepository.findByUsername(username);
         if (user.isEmpty()) {
             response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
             response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
@@ -58,7 +101,7 @@ public class UsersService {
 
     public ResponseEntity<GeneralResponse> getByUsername(String username) {
         GeneralResponse response = new GeneralResponse();
-        Optional<Users> user = usersRepository.findByUsername(username);
+        Optional<User> user = usersRepository.findByUsername(username);
         if (user.isEmpty()) {
             response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
             response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
