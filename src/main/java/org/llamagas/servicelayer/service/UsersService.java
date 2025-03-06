@@ -2,9 +2,9 @@ package org.llamagas.servicelayer.service;
 
 import org.llamagas.servicelayer.constants.ResponsesCodes;
 import org.llamagas.servicelayer.model.domain.Role;
+import org.llamagas.servicelayer.model.domain.User;
 import org.llamagas.servicelayer.model.request.CreateUserRequest;
 import org.llamagas.servicelayer.model.response.GeneralResponse;
-import org.llamagas.servicelayer.model.domain.User;
 import org.llamagas.servicelayer.repository.UsersRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 public class UsersService {
@@ -25,7 +24,7 @@ public class UsersService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
 
-    public UsersService(UsersRepository usersRepository,RoleService roleService) {
+    public UsersService(UsersRepository usersRepository, RoleService roleService) {
         this.usersRepository = usersRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.roleService = roleService;

@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum ResponsesCodes {
-    SUCCESSFUL("L001","Ejecución exitosa"),
-    OBJECT_NOT_FOUND("L002","No encontró la entidad"),
-    PARAMETER_FAILED("L003","Error en los parametros"),
-    ENTITY_ALREADY_EXITS("L004","La entidad ya existe"),
-    FAILED("L900","Ocurrió un error durante la ejecución"),
-    UNAUTHORIZED("L401","Credencales incorrectas");
+    SUCCESSFUL("L001", "Ejecución exitosa"),
+    OBJECT_NOT_FOUND("L002", "No encontró la entidad"),
+    PARAMETER_FAILED("L003", "Error en los parametros"),
+    ENTITY_ALREADY_EXITS("L004", "La entidad ya existe"),
+    FAILED("L900", "Ocurrió un error durante la ejecución"),
+    UNAUTHORIZED("L401", "Credencales incorrectas");
 
     private final String code;
     private final String description;

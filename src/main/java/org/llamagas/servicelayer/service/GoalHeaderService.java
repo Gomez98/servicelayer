@@ -1,19 +1,19 @@
 package org.llamagas.servicelayer.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.llamagas.servicelayer.constants.ResponsesCodes;
+import org.llamagas.servicelayer.model.domain.GoalHeader;
+import org.llamagas.servicelayer.model.domain.GoalHeaderStatus;
 import org.llamagas.servicelayer.model.request.CreateGoalHeaderRequest;
 import org.llamagas.servicelayer.model.response.AllGoalsResponse;
 import org.llamagas.servicelayer.model.response.GeneralResponse;
-import org.llamagas.servicelayer.model.domain.GoalHeader;
-import org.llamagas.servicelayer.model.domain.GoalHeaderStatus;
 import org.llamagas.servicelayer.repository.GoalHeaderRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class GoalHeaderService {
@@ -24,10 +24,10 @@ public class GoalHeaderService {
         this.goalHeaderRepository = goalHeaderRepository;
     }
 
-    public ResponseEntity<GeneralResponse> getAllGoals(){
+    public ResponseEntity<GeneralResponse> getAllGoals() {
         GeneralResponse response = new GeneralResponse();
         List<GoalHeader> goalHeaders = goalHeaderRepository.findAll();
-        if(goalHeaders.isEmpty()){
+        if (goalHeaders.isEmpty()) {
             response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
             response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -42,7 +42,7 @@ public class GoalHeaderService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<GeneralResponse> addGoalHeader(CreateGoalHeaderRequest request, User user){
+    public ResponseEntity<GeneralResponse> addGoalHeader(CreateGoalHeaderRequest request, User user) {
         GeneralResponse response = new GeneralResponse();
         GoalHeader goalHeader = new GoalHeader();
         goalHeader.setId(UUID.randomUUID().toString());
@@ -57,12 +57,12 @@ public class GoalHeaderService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> updateGoalHeader(GoalHeader goalHeader){
+    public ResponseEntity<?> updateGoalHeader(GoalHeader goalHeader) {
         goalHeaderRepository.save(goalHeader);
         return new ResponseEntity<>(goalHeader, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> deleteGoalHeader(GoalHeader goalHeader){
+    public ResponseEntity<?> deleteGoalHeader(GoalHeader goalHeader) {
         goalHeaderRepository.delete(goalHeader);
         return new ResponseEntity<>(goalHeader, HttpStatus.OK);
     }

@@ -2,7 +2,6 @@ package org.llamagas.servicelayer.model.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-import org.llamagas.servicelayer.model.domain.Role;
 
 import java.util.Set;
 

@@ -2,7 +2,10 @@ package org.llamagas.servicelayer.service;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpHeaders;
@@ -11,10 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
-
 import java.util.List;
 
 @Service
@@ -22,7 +25,11 @@ public class ConvertService {
 
     public ResponseEntity<byte[]> convert(MultipartFile file) {
         try {
-            // Leer el PDF
+            long maxSize = 5 * 1024 * 1024;
+            if (file.getSize() > maxSize) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(("El archivo excede el tamaño máximo permitido de " + (maxSize / (1024 * 1024)) + " MB").getBytes());
+            }
             PDDocument document = PDDocument.load(file.getInputStream());
             PDFTextStripper pdfStripper = new PDFTextStripper();
             pdfStripper.setSortByPosition(true);
@@ -54,13 +61,17 @@ public class ConvertService {
         String[] lines = pdfText.split("\\r?\\n");
 
         for (String line : lines) {
-            if (line.contains("BANCO DE LA NACION") || line.contains("RUC :")
-                    || line.contains("ESTADOS DE CUENTAS") || line.contains("CLIENTE :")
+            if (line.contains("BANCO DE LA NACION")
+                    || line.contains("RUC :")
+                    || line.contains("ESTADOS DE CUENTAS")
+                    || line.contains("CLIENTE :")
                     || line.contains("NRO :")
-                    || line.contains("AGENCIA :") || line.contains("EMISOR :")) {
+                    || line.contains("AGENCIA :")
+                    || line.contains("EMISOR :")
+            ) {
                 header.add(line.trim());
             }
-            if (line.contains("FECHA :")) {
+            if (line.contains("MES")) {
                 break;
             }
         }
@@ -70,20 +81,34 @@ public class ConvertService {
     private List<String[]> extractTableData(String pdfText) {
         List<String[]> tableData = new ArrayList<>();
         String[] lines = pdfText.split("\\r?\\n");
-
-        boolean tableStarted = false;
-        String headerLine = "MES DIA CAJERO AGENCIA TRANSACCION IMPORTE";
-
+        boolean firstRow = false;
         for (String line : lines) {
-            if (line.contains(headerLine)) {
-                tableStarted = true;
-                if (tableData.isEmpty()) {
-                    tableData.add(headerLine.split("\\s+"));
-                }
+            if (line.contains("MES") && !firstRow) {
+                String mes = line.substring(0, 3).trim();
+                String dia = line.substring(4, 7).trim();
+                String cajero = line.substring(8, 14).trim();
+                String agencia = line.substring(15, 22).trim();
+                String transaccion = line.substring(23, 34).trim();
+                String importe = line.substring(35, 42).trim();
+                tableData.add(new String[]{mes, dia, cajero, agencia, transaccion, importe});
+                firstRow = true;
+            }
+
+            if (line.contains("BANCO DE LA NACION") || line.contains("RUC :")
+                    || line.contains("ESTADOS DE CUENTAS") || line.contains("CLIENTE :")
+                    || line.contains("NRO :")
+                    || line.contains("AGENCIA :")
+                    || line.contains("EMISOR :")
+                    || (line.contains("TRANSACCION") && firstRow)
+                    || line.contains("FUNCIONARIO")
+                    || line.contains("_______________________")
+                    || line.contains("FIRMA")
+            ) {
                 continue;
             }
 
-            if (tableStarted && !line.trim().isEmpty()) {
+            if (!line.trim().isEmpty()) {
+
                 if (line.contains("SALDO INICIAL") || line.contains("SALDO FINAL")) {
                     tableData.add(new String[]{line.trim()});
                 } else {
@@ -92,8 +117,21 @@ public class ConvertService {
                         String dia = line.substring(4, 6).trim();
                         String cajero = line.substring(7, 11).trim();
                         String agencia = line.substring(12, 16).trim();
-                        String transaccion = line.substring(17, 54).trim();
-                        String importe = line.substring(55).trim();
+                        String transaccion = "";
+                        String importe = "";
+                        if(line.substring(17, 22).trim().contains("ABONO")){
+                            transaccion = line.substring(17, 54).trim();
+                            importe = line.substring(55).trim();
+                        } else if (line.substring(17, 22).trim().contains("CARGO")){
+                            transaccion = line.substring(17, 40).trim();
+                            importe = line.substring(41).trim();
+                        } else if (line.substring(17, 22).trim().contains("NOTA")){
+                            transaccion = line.substring(17, 30).trim();
+                            importe = line.substring(31).trim();
+                        } else if (line.substring(17, 22).trim().contains("COM")){
+                            transaccion = line.substring(17, 40).trim();
+                            importe = line.substring(41).trim();
+                        }
 
                         tableData.add(new String[]{mes, dia, cajero, agencia, transaccion, importe});
                     } catch (StringIndexOutOfBoundsException e) {

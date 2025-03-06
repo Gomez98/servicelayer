@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 //@Service
 public class SapService {
@@ -65,7 +65,6 @@ public class SapService {
         ResponseEntity<MasterFields> response = restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, entity, MasterFields.class);
         return response.getBody();
     }
-
 
 
 }

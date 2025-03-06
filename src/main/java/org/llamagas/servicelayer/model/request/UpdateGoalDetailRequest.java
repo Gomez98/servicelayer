@@ -8,5 +8,6 @@ import lombok.Data;
 public class UpdateGoalDetailRequest {
     @NotNull
     private String id;
+    @NotNull
     private String content;
 }

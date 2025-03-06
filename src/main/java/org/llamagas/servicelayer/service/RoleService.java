@@ -1,22 +1,18 @@
 package org.llamagas.servicelayer.service;
 
 import org.llamagas.servicelayer.constants.ResponsesCodes;
-import org.llamagas.servicelayer.model.domain.Role;
 import org.llamagas.servicelayer.model.domain.Permission;
+import org.llamagas.servicelayer.model.domain.Role;
 import org.llamagas.servicelayer.model.request.CreateRoleRequest;
 import org.llamagas.servicelayer.model.response.GeneralResponse;
-import org.llamagas.servicelayer.repository.RoleRepository;
 import org.llamagas.servicelayer.repository.PermissionRepository;
+import org.llamagas.servicelayer.repository.RoleRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class RoleService {
@@ -33,7 +29,7 @@ public class RoleService {
      * Obtener todos los roles.
      */
     public ResponseEntity<GeneralResponse> getAllRoles() {
-            GeneralResponse response = new GeneralResponse();
+        GeneralResponse response = new GeneralResponse();
         List<Role> roles = roleRepository.findAll();
 
         if (roles.isEmpty()) {

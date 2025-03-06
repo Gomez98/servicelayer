@@ -2,12 +2,15 @@ package org.llamagas.servicelayer.controller;
 
 import jakarta.validation.Valid;
 import org.llamagas.servicelayer.model.request.CreateUserRequest;
-import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.model.request.LoginRequest;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController

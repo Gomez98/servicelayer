@@ -2,14 +2,9 @@ package org.llamagas.servicelayer.repository.impl;
 
 import org.llamagas.servicelayer.repository.GoalReportRepository;
 import org.llamagas.servicelayer.storeprocedures.GoalReportDTO;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,10 +1,10 @@
 package org.llamagas.servicelayer.service;
 
 import org.llamagas.servicelayer.constants.ResponsesCodes;
-import org.llamagas.servicelayer.model.request.CreateMasterFieldRequest;
-import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.model.domain.MasterFields;
+import org.llamagas.servicelayer.model.request.CreateMasterFieldRequest;
 import org.llamagas.servicelayer.model.request.UpdateMasterFieldRequest;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.repository.MasterFieldsRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class MasterFieldsService {
     public ResponseEntity<GeneralResponse> getAllMasterFields() {
         GeneralResponse response = new GeneralResponse();
         List<MasterFields> masterFieldsList = masterFieldsRepository.findAll();
-        if(masterFieldsList.isEmpty()){
+        if (masterFieldsList.isEmpty()) {
             response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
             response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
             response.setData(null);

@@ -25,7 +25,17 @@ public class GoalDetailService {
     }
 
     public ResponseEntity<GeneralResponse> getGoalDetail(String goalHeaderId) {
+        int maxLength = 255;
+
         GeneralResponse response = new GeneralResponse();
+
+        if (goalHeaderId.length() > maxLength) {
+            response.setData("El ID no puede tener más de " + maxLength + " caracteres.");
+            response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
+            response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         Optional<GoalDetail> goalDetailOptional = goalDetailRepository.findByGoalHeader_Id(goalHeaderId);
         if (goalDetailOptional.isPresent()) {
             response.setData(goalDetailOptional.get());

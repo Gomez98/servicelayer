@@ -1,8 +1,9 @@
 package org.llamagas.servicelayer.controller;
 
+import jakarta.validation.Valid;
 import org.llamagas.servicelayer.model.request.CreateMasterFieldRequest;
-import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.model.request.UpdateMasterFieldRequest;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.llamagas.servicelayer.service.MasterFieldsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,13 +27,13 @@ public class MasterFieldsController {
 
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('PERMISO_CREAR_CAMPO_MAESTRO')")
-    public ResponseEntity<GeneralResponse> addMasterField(@RequestBody CreateMasterFieldRequest request) {
+    public ResponseEntity<GeneralResponse> addMasterField(@RequestBody @Valid CreateMasterFieldRequest request) {
         return masterFieldsService.createMasterField(request);
     }
 
     @PatchMapping("/update")
     @PreAuthorize("hasAuthority('PERMISO_ACTUALIZAR_CAMPO_MAESTRO')")
-    public ResponseEntity<GeneralResponse> updateMasterField(@RequestBody UpdateMasterFieldRequest request) {
+    public ResponseEntity<GeneralResponse> updateMasterField(@RequestBody @Valid UpdateMasterFieldRequest request) {
         return masterFieldsService.updateMasterField(request);
     }
 

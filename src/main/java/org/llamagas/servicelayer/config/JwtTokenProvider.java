@@ -84,13 +84,8 @@ public class JwtTokenProvider {
 
             if (timeToExpire < renewalThreshold) {
                 String newToken = updateTokenExpiration(claims);
-
-                // Guardar el token en Redis con su tiempo de expiración
                 redisTemplate.opsForValue().set(token, "revoked", expirationTime, TimeUnit.MILLISECONDS);
-
                 return newToken;
-
-
             }
             return token;
         } catch (ExpiredJwtException e) {

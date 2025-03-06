@@ -18,7 +18,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<GeneralResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         GeneralResponse response = new GeneralResponse();
         response.setCode(ResponsesCodes.PARAMETER_FAILED.getCode());
-        response.setMessage(ResponsesCodes.PARAMETER_FAILED.getDescription());
+        response.setMessage(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Maneja errores de validación cuando los datos no cumplen los requisitos.
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<GeneralResponse> handleException(Exception ex) {
+        GeneralResponse response = new GeneralResponse();
+        response.setCode(ResponsesCodes.FAILED.getCode());
+        response.setMessage(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

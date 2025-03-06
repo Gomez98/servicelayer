@@ -2,10 +2,10 @@ package org.llamagas.servicelayer.service;
 
 import org.llamagas.servicelayer.config.JwtTokenProvider;
 import org.llamagas.servicelayer.constants.ResponsesCodes;
-import org.llamagas.servicelayer.model.request.CreateUserRequest;
-import org.llamagas.servicelayer.model.response.GeneralResponse;
-import org.llamagas.servicelayer.model.request.LoginRequest;
 import org.llamagas.servicelayer.model.domain.User;
+import org.llamagas.servicelayer.model.request.CreateUserRequest;
+import org.llamagas.servicelayer.model.request.LoginRequest;
+import org.llamagas.servicelayer.model.response.GeneralResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class AuthService {
             response.setMessage(ResponsesCodes.UNAUTHORIZED.getDescription());
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
-        if(userResponse.getBody() == null || userResponse.getBody().getData() == null) {
+        if (userResponse.getBody() == null || userResponse.getBody().getData() == null) {
             response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
             response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
             return new ResponseEntity<>(response, HttpStatus.OK);
