@@ -65,11 +65,11 @@ services:
     cap_add:
       - IPC_LOCK
     environment:
-      - VAULT_DEV_ROOT_TOKEN_ID=root
       - VAULT_ADDR=http://127.0.0.1:8200
-    command: server -dev
+    command: [ "vault", "server", "-config=/vault/config/config.hcl" ]
     volumes:
       - vault-data:/vault/file
+      - ./vault-config:/vault/config
     networks:
       - monitoring
 

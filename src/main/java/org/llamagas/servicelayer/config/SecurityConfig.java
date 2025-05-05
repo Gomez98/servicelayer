@@ -50,14 +50,15 @@ public class SecurityConfig {
                                 "/configuration/security",
                                 "/swagger-ui.html",
                                 "/favicon.ico",
-                                // Whitelist para Zipkin
                                 "/zipkin/**",
                                 "/actuator/zipkin",
                                 "/actuator/trace",
-                                // Whitelist para Prometheus
                                 "/actuator/prometheus",
                                 "/actuator/health",
-                                "/actuator/metrics"
+                                "/actuator/metrics",
+                                "/v1/sys/health",
+                                "/v1/auth/token/lookup",
+                                "/v1/secret/**"
                         ).permitAll()
                         //.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
