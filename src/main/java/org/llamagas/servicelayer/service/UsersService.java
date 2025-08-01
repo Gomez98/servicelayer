@@ -45,7 +45,7 @@ public class UsersService {
         // Crear el usuario (sin roles)
         User newUser = new User();
         //newUser.setId(UUID.randomUUID().toString());
-        newUser.setUsername(request.getUsername())));
+        newUser.setUsername(request.getUsername());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
         newUser.setName(request.getName());
 
