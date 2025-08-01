@@ -51,7 +51,3 @@ jobs:
 
     - name: Analyze code with CodeQL
       uses: github/codeql-action/analyze@v3
-
-
-    - name: Analyze code with CodeQL
-      uses: github/codeql-action/analyze@v3
