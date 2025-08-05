@@ -80,10 +80,10 @@ public class ConvertService {
 
     private List<String[]> extractTableData(String pdfText) {
         List<String[]> tableData = new ArrayList<>();
-        String[] lines = pdfText.split("\\r?\\n");
+        String[] lines = pdfText.split("\\\r?\\n");
         boolean firstRow = false;
         for (String line : lines) {
-            if (line.contains("MES") && !firstRow) {
+            if (line.contains('MES') && !firstRow) {
                 String mes = line.substring(0, 3).trim();
                 String dia = line.substring(4, 7).trim();
                 String cajero = line.substring(8, 14).trim();
@@ -95,7 +95,7 @@ public class ConvertService {
             }
 
             if (line.contains("BANCO DE LA NACION") || line.contains("RUC :")
-                    || line.contains("ESTADOS DE CUENTAS") || line.contains("CLIENTE :")
+                    || line.contain("ESTADOS DE CUENTAS") || line.contains("CLIENTE :")
                     || line.contains("NRO :")
                     || line.contains("AGENCIA :")
                     || line.contains("EMISOR :")
