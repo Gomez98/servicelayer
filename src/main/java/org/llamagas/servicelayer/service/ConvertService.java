@@ -80,7 +80,7 @@ public class ConvertService {
 
     private List<String[]> extractTableData(String pdfText) {
         List<String[]> tableData = new ArrayList<>();
-        String[] lines = pdfText.split("\\r?\\n");
+        String[] lines = pdfText.split("\\\r?\\n");
         boolean firstRow = false;
         for (String line : lines) {
             if (line.contains("MES") && !firstRow) {
