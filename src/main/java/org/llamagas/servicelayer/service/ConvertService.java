@@ -83,7 +83,7 @@ public class ConvertService {
         String[] lines = pdfText.split("\\\r?\\n");
         boolean firstRow = false;
         for (String line : lines) {
-            if (line.contains('MES') && !firstRow) {
+            if (line.contains("MES") && !firstRow) {
                 String mes = line.substring(0, 3).trim();
                 String dia = line.substring(4, 7).trim();
                 String cajero = line.substring(8, 14).trim();
