@@ -28,7 +28,7 @@ public class PermissionService {
     @Transactional(readOnly = true)
     public ResponseEntity<GeneralResponse> getAllPermissions() {
         GeneralResponse response = new GeneralResponse();
-        List<Permission> permissions = permissionRepository.findAll();
+        List<Permission> permissions = permissionRepository.findAllByIds();
 
         if (permissions.isEmpty()) {
             response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
