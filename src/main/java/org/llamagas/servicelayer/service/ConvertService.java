@@ -95,7 +95,7 @@ public class ConvertService {
             }
 
             if (line.contains("BANCO DE LA NACION") || line.contains("RUC :")
-                    || line.contain("ESTADOS DE CUENTAS") || line.contains("CLIENTE :")
+                    || line.contains("ESTADOS DE CUENTAS") || line.contains("CLIENTE :")
                     || line.contains("NRO :")
                     || line.contains("AGENCIA :")
                     || line.contains("EMISOR :")
