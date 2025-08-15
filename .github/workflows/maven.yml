@@ -80,7 +80,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
   
       - name: Run Tests with Coverage (JaCoCo)
-        run: mvn -B clean verify -DskipTests
+        run: mvn -B clean verify -DskipTests 
   
       - name: SonarCloud Scan
         env:
