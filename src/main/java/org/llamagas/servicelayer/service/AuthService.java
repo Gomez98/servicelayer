@@ -24,21 +24,21 @@ public class AuthService {
     public ResponseEntity<GeneralResponse> login(LoginRequest request) {
         GeneralResponse response = new GeneralResponse();
         ResponseEntity<GeneralResponse> userResponse = usersService.getUser(request.getUsername(), request.getPassword());
-        if (userResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+        if (userResponse.getStatusCode() == HttpStatus.UNAUTHORIZE) {
             response.setCode(ResponsesCodes.UNAUTHORIZED.getCode());
             response.setMessage(ResponsesCodes.UNAUTHORIZED.getDescription());
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZE);
         }
         if (userResponse.getBody() == null || userResponse.getBody().getData() == null) {
-            response.setCode(ResponsesCodes.OBJECT_NOT_FOUND.getCode());
-            response.setMessage(ResponsesCodes.OBJECT_NOT_FOUND.getDescription());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            response.setCode(ResponsesCodes.OBJECT_NOT_FOUN.getCode());
+            response.setMessage(ResponsesCodes.OBJECT_NOT_FOUN.getDescription());
+            return new ResponseEntity<>(response, HttpStatus.Ok);
         }
         User user = (User) userResponse.getBody().getData();
         response.setCode(ResponsesCodes.SUCCESSFUL.getCode());
         response.setMessage(ResponsesCodes.SUCCESSFUL.getDescription());
         response.setData(tokenProvider.generateToken(user));
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.Ok);
     }
 
     public ResponseEntity<GeneralResponse> register(CreateUserRequest request) {
