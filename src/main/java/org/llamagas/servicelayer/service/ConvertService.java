@@ -133,7 +133,7 @@ public class ConvertService {
                             importe = line.substring(41).trim();
                         }
 
-                        tableData.add(new String[]{mes, dia, cajero, agencia, transaccion, importe});
+                        tableData.add(new String[]{mes, dia, cajero, transaccion, importe});
                     } catch (StringIndexOutOfBoundsException e) {
                         System.err.println("Error al procesar la línea: " + line);
                     }
@@ -161,7 +161,7 @@ public class ConvertService {
                 if (rowData.length == 1) {
                     Cell cell = row.createCell(0);
                     cell.setCellValue(rowData[0]);
-                    sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, 0, 5));
+                    sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum - 1, 0, 5));
                 } else {
                     for (int colNum = 0; colNum < rowData.length; colNum++) {
                         row.createCell(colNum).setCellValue(rowData[colNum]);
