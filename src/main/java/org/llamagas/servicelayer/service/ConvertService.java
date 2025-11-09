@@ -90,7 +90,7 @@ public class ConvertService {
                 String agencia = line.substring(15, 22).trim();
                 String transaccion = line.substring(23, 34).trim();
                 String importe = line.substring(35, 42).trim();
-                tableData.add(new String[]{mes, dia, cajero, agencia, transaccion, importe});
+                tableData.add(new String[]{mes, dia, cajero, transaccion, importe});
                 firstRow = true;
             }
 
